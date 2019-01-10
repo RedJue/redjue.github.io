@@ -1,0 +1,1192 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+  
+  
+    
+    
+  <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link href="/lib/pace/pace-theme-minimal.min.css?v=1.0.2" rel="stylesheet">
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+  <meta name="google-site-verification" content="nD4Yo04Bg3x_0FsGKmGGFee6Em8p7jdzt-dXh7tC1sk" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Monda:300,300italic,400,400italic,700,700italic|Roboto Slab:300,300italic,400,400italic,700,700italic|Rosario:300,300italic,400,400italic,700,700italic|PT Mono:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="原型与继承," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1" />
+
+
+
+
+
+
+<meta name="description" content="javascript是一门弱类型的语言，所以并没有像java这种有类的概念，自然也没有子类继承父类这一说，但是所幸js有自己的一套继承机制，下面我就来谈谈关于js的继承我的一点微薄的理解。">
+<meta name="keywords" content="原型与继承">
+<meta property="og:type" content="article">
+<meta property="og:title" content="谈谈js的原型与继承">
+<meta property="og:url" content="http://redjue.me/2017/08/26/谈谈js的原型与继承/index.html">
+<meta property="og:site_name" content="Red Jue&#39;s Blog">
+<meta property="og:description" content="javascript是一门弱类型的语言，所以并没有像java这种有类的概念，自然也没有子类继承父类这一说，但是所幸js有自己的一套继承机制，下面我就来谈谈关于js的继承我的一点微薄的理解。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://redjue.me/2017/08/26/谈谈js的原型与继承/pic.jpg">
+<meta property="og:updated_time" content="2017-09-01T16:23:39.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="谈谈js的原型与继承">
+<meta name="twitter:description" content="javascript是一门弱类型的语言，所以并没有像java这种有类的概念，自然也没有子类继承父类这一说，但是所幸js有自己的一套继承机制，下面我就来谈谈关于js的继承我的一点微薄的理解。">
+<meta name="twitter:image" content="http://redjue.me/2017/08/26/谈谈js的原型与继承/pic.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://redjue.me/2017/08/26/谈谈js的原型与继承/"/>
+
+
+
+
+
+  <title>谈谈js的原型与继承 | Red Jue's Blog</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Red Jue's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">生命不息 代码不止</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://redjue.me/2017/08/26/谈谈js的原型与继承/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Red Jue">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/redjue.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Red Jue's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">谈谈js的原型与继承</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-08-26T14:12:37+08:00">
+                2017-08-26
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i>
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>次
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p><img src="/2017/08/26/谈谈js的原型与继承/pic.jpg" alt="谈谈js的原型与继承"><br>javascript是一门弱类型的语言，所以并没有像java这种有类的概念，自然也没有子类继承父类这一说，但是所幸js有自己的一套继承机制，下面我就来谈谈关于js的继承我的一点微薄的理解。</p>
+<a id="more"></a>
+<h2 id="构造函数"><a href="#构造函数" class="headerlink" title="构造函数"></a><mblue>构造函数</mblue></h2><p>js创建对象的方式有很多，比如对象字面量直接创建啊，类似这样：<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//这种算是最简单的创建对象的方法，简单粗暴</span></div><div class="line"><span class="keyword">var</span> obj = <span class="keyword">new</span> <span class="built_in">Object</span>();<span class="comment">//或者</span></div><div class="line"><span class="keyword">var</span> obj = &#123;&#125;;</div></pre></td></tr></table></figure></p>
+<p>或者工厂模式创建，类似这样：<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//当你需要批量创建对象时可以用工厂模式统一创建</span></div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">factory</span>(<span class="params">name, age</span>) </span>&#123;</div><div class="line">    <span class="keyword">var</span> obj = <span class="keyword">new</span> <span class="built_in">Object</span>();</div><div class="line">    obj.name = name;</div><div class="line">    obj.age = age;</div><div class="line">    obj.dosth = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</div><div class="line">        <span class="built_in">console</span>.log(<span class="string">'做些事!'</span>);</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> obj;</div><div class="line">&#125;</div><div class="line"><span class="keyword">var</span> example1 = factory(<span class="string">'redjue'</span>, <span class="number">24</span>) <span class="comment">// &#123;name: "redjue", age: 24, dosth: ƒ&#125;</span></div></pre></td></tr></table></figure></p>
+<p>亦或者构造函数模式创建，类似这样：<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//构造函数解决了工厂模式反复创建函数方法的弊端，减少了对象的体积</span></div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">constructor</span>(<span class="params">name, age</span>) </span>&#123;</div><div class="line">    <span class="keyword">this</span>.name = name;</div><div class="line">    <span class="keyword">this</span>.age = age;</div><div class="line">    <span class="keyword">constructor</span>.prototype.dosth = function () &#123;</div><div class="line">        <span class="built_in">console</span>.log(<span class="string">'做些事!'</span>);</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"><span class="keyword">var</span> example2 = <span class="keyword">new</span> <span class="keyword">constructor</span>('redjue', 24);//&#123;name: <span class="string">"redjue"</span>, <span class="attr">age</span>: <span class="number">24</span>&#125;</div><div class="line">example2.dosth() <span class="comment">//做些事!</span></div></pre></td></tr></table></figure></p>
+<p>js的新手看到构造函数这可能会比较迷。。对象里没有<mred>dosth</mred>这个方法，它怎么还能调用到？是被什么‘吃’了吗，事实上它确实被‘吃’了，它被<mred>constructor</mred>的原型对象给接管了，具体形式如下：<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//constructor.prototype</span></div><div class="line">&#123;</div><div class="line">    dosth:<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</div><div class="line">        <span class="built_in">console</span>.log(<span class="string">'做些事!'</span>); </div><div class="line">    &#125;,</div><div class="line">    <span class="keyword">constructor</span>:<span class="keyword">constructor</span>(name, age)&#123;...&#125;,</div><div class="line">    __proto__:<span class="built_in">Object</span>    </div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>那么为什么<mred>example2</mred>能调用到<mred>constructor</mred>原型对象里的方法呢，构造函数的原型对象与他实例化的对象之间是通过什么连接起来的呢？这就要提到另一个概念，原型链的传递。</p>
+<h2 id="原型链的传递"><a href="#原型链的传递" class="headerlink" title="原型链的传递"></a><mblue>原型链的传递</mblue></h2><h3 id="构造函数创建实例的过程"><a href="#构造函数创建实例的过程" class="headerlink" title="构造函数创建实例的过程"></a><mblack>构造函数创建实例的过程</mblack></h3><p>构造函数通过<mred>new</mred>关键字来创建实例对象，具体过程如下：</p>
+<ol>
+<li>创建一个空对象。</li>
+<li>将构造函数的作用域赋值给这个空对象，也就是改变<mred>this</mred>指向。</li>
+<li>根据构造函数中创建对象的代码，实例化这个空对象。</li>
+<li>返回这个新对象。</li>
+</ol>
+<p>我们一步步来看，创建一个空对象就是直接通过对象字面量直接创建一个对象：<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> newObj = <span class="keyword">new</span> <span class="built_in">Object</span>();</div></pre></td></tr></table></figure></p>
+<p>第二步中所做的，可以用以下代码表示：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//让constructor构造函数在newObj的环境下执行，this自然指向newObj</span></div><div class="line"><span class="keyword">constructor</span>.call(newObj);</div><div class="line">//也可以形象的表示成这样</div><div class="line">newObj = &#123;</div><div class="line">    <span class="keyword">constructor</span>: function (name, age) &#123;</div><div class="line">        <span class="keyword">this</span>.name = name;</div><div class="line">        <span class="keyword">this</span>.age = age;</div><div class="line">        <span class="keyword">this</span>.constructor.prototype.dosth = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</div><div class="line">            <span class="built_in">console</span>.log(<span class="string">'做些事!'</span>);</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>第三步，如下：<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//当然constructor并没有在newObj里面，这段代码只是表示了和call函数做的一样的事</span></div><div class="line">newObj.constructor(<span class="string">'redjue'</span>, <span class="number">24</span>);</div></pre></td></tr></table></figure></p>
+<p>第四步，返回构造函数的实例：<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">return</span> newObj</div></pre></td></tr></table></figure></p>
+<p>至此，我们通过构造函数创建了一个实例对象，但是这个过程看起来似乎并没有关于原型链传递的操作对不对？其实嘛，js的底层都帮我们解决了，这里要介绍一个有关原型链传递的关键属性<code>__proto__</code>。</p>
+<h3 id="proto属性"><a href="#proto属性" class="headerlink" title="proto属性"></a><mblack>proto属性</mblack></h3><p>这个属性为什么能关乎原型链的传递呢？原因就在实例化对象的过程中，<mred>constructor</mred>把自己的原型对象当做一个属性值赋值给了<mred>newObj</mred>，<br>而这个被赋值的属性就是<code>__proto__</code>，这是一个特殊的属性，专门用来保存指向对应原型的指针。所以当在调用实例对象自己本身没有的属性或方法时，通过这个属性的指向，我们可以去<mred>constructor</mred>的原型里面查找，这一过程称为原型链的传递。特别要注意的一点，这一过程只发生在实例对象与原型之间，而和<mred>constructor</mred>没什么关系。</p>
+<h2 id="ES5继承的实现"><a href="#ES5继承的实现" class="headerlink" title="ES5继承的实现"></a><mblue>ES5继承的实现</mblue></h2><p>为什么要说ES5继承呢，主要是ES6出了一个新特性class，通过更优雅的语法来实现继承，但本质上来说和ES5的继承方式是一样的，只不过是一个语法糖，后面再谈ES6继承的一些特性和实现原理。</p>
+<h3 id="常规的实现方式"><a href="#常规的实现方式" class="headerlink" title="常规的实现方式"></a><mblack>常规的实现方式</mblack></h3><p>我们知道了原型链的传递是发生在实例对象和原型之间的，那么我们如果想要实现继承的话，就可以把它们连接起来，类似这样：<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">parent</span>(<span class="params"></span>)</span>&#123;</div><div class="line"> <span class="comment">//父类</span></div><div class="line"> <span class="keyword">this</span>.name=<span class="string">'parent'</span>;</div><div class="line"> <span class="keyword">this</span>.age=<span class="number">56</span>;</div><div class="line"> parent.prototype.dosth = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</div><div class="line">    <span class="built_in">console</span>.log(<span class="string">'做些事!'</span>);</div><div class="line">&#125;   </div><div class="line">&#125;</div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">child</span>(<span class="params"></span>)</span>&#123;</div><div class="line"> <span class="comment">//子类</span></div><div class="line"> <span class="keyword">this</span>.name=<span class="string">'child'</span>;</div><div class="line"> <span class="keyword">this</span>.age=<span class="number">24</span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">//连接原型链</span></div><div class="line">child.prototype=<span class="keyword">new</span> parent();</div><div class="line"><span class="keyword">var</span> child=<span class="keyword">new</span> child();</div><div class="line">child.dosth() <span class="comment">//'做些事!'</span></div></pre></td></tr></table></figure></p>
+<p>子类的实例对象可以通过搜索原型链往上找，最终找到父类原型里面的<mred>dosth</mred>方法。但是这样做有个问题，我们来看看子类的原型：<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//子类原型</span></div><div class="line">&#123;</div><div class="line">    age: <span class="number">56</span>,</div><div class="line">    name: <span class="string">"parent"</span>,</div><div class="line">    __proto__: <span class="built_in">Object</span></div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>发现问题了吗，子类的原型就是父类的实例对象，意味着这个实例对象里面的属性其实是作为原型里的属性而存在的，这违背了属性私有化的理念，我们只是想把方法进行复用，而属性并不需要共有。</p>
+<h3 id="借用构造实现组合继承"><a href="#借用构造实现组合继承" class="headerlink" title="借用构造实现组合继承"></a><mblack>借用构造实现组合继承</mblack></h3><p>既然我们遇到了这个问题，那么有没有什么办法能解决这个问题？有大神用了一种巧妙的办法规避了这个问题，这就是借用构造函数：<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">parent</span>(<span class="params"></span>) </span>&#123;</div><div class="line">    <span class="comment">//父类</span></div><div class="line">    <span class="keyword">this</span>.name = <span class="string">'parent'</span>;</div><div class="line">    <span class="keyword">this</span>.age = <span class="number">56</span>;</div><div class="line">    parent.prototype.dosth = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</div><div class="line">        <span class="built_in">console</span>.log(<span class="string">'做些事!'</span>);</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">child</span>(<span class="params"></span>) </span>&#123;</div><div class="line">    <span class="comment">//子类</span></div><div class="line">    <span class="keyword">this</span>.name = <span class="string">'child'</span>;</div><div class="line">    <span class="keyword">this</span>.age = <span class="number">24</span>;</div><div class="line">    <span class="comment">//将父类的属性在子类中私有化</span></div><div class="line">    parent.call(<span class="keyword">this</span>);</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">//连接原型链</span></div><div class="line">child.prototype = <span class="keyword">new</span> parent();</div><div class="line"><span class="comment">//将child原型的constructor指向child自身，默认状态指向的是parent，显然有问题</span></div><div class="line">child.prototype.constructor=child;</div><div class="line"><span class="keyword">var</span> _child = <span class="keyword">new</span> child();</div><div class="line">_child.dosth() <span class="comment">//'做些事!'</span></div></pre></td></tr></table></figure></p>
+<p>这样我们保证了，<mred>child</mred>的每个实例对象都有<mred>parent</mred>定义的私有属性，而不是共享<mred>_child</mred>继承的<mred>parent</mred>的实例里面的共有属性，实现了属性私有，方法复用的比较完美的组合继承。</p>
+<h2 id="ES6继承的实现"><a href="#ES6继承的实现" class="headerlink" title="ES6继承的实现"></a><mblue>ES6继承的实现</mblue></h2><h3 id="class，static，extend和super关键字"><a href="#class，static，extend和super关键字" class="headerlink" title="class，static，extend和super关键字"></a><mblack>class，static，extend和super关键字</mblack></h3><p>ES6引入了一个新的概念<mred>class</mred>，也就是类，形式类似这样：<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">parent</span> </span>&#123;</div><div class="line">    <span class="keyword">constructor</span>() &#123;</div><div class="line">        <span class="keyword">this</span>.name = <span class="string">'redjue'</span>;</div><div class="line">        <span class="keyword">this</span>.age = <span class="number">24</span></div><div class="line">    &#125;</div><div class="line">    dosth() &#123;</div><div class="line">        <span class="built_in">console</span>.log(<span class="string">'做些事!'</span>)</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"><span class="keyword">var</span> _parent = <span class="keyword">new</span> parent;<span class="comment">//&#123;name: "redjue", age: 24&#125;</span></div></pre></td></tr></table></figure></p>
+<p>粗粗一看，哇，好高大上的感觉，但是仔细看看类里面的内容，卧槽，这不就是原型对象里面的东西吗。。如果我们把<mred>_parent</mred>这个实例的原型打印出来，如下所示：<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line">    <span class="keyword">constructor</span>: class parent,</div><div class="line">    dosth: ƒ dosth(),</div><div class="line">    __proto__:Object</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>是不是一目了然了，<mred>class</mred>里面定义的就是原型对象里面的属性而已，通过<mred>class</mred>关键字，我们可以在<mred>class</mred>里面一起定义原型属性和构造函数的自定义属性，这种方式相比较ES5的在构造函数里定义显的更加优雅和直观，通过类来new一个对象也就顺理成章，不会像ES5用构造函数来new一个对象那么生硬。</p>
+<p>接下来说说<mred>static</mred>关键字，这个很有意思，他可以隔离实例与原型对象的联系，换句话说，你用<mred>static</mred>定义的方法，并不能被实例所访问到，所以是静态的，而不是共有的，类似下面这样：<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">parent</span> </span>&#123;</div><div class="line">    <span class="keyword">constructor</span>() &#123;</div><div class="line">        <span class="keyword">this</span>.name = <span class="string">'redjue'</span>;</div><div class="line">        <span class="keyword">this</span>.age = <span class="number">24</span></div><div class="line">    &#125;</div><div class="line">    <span class="keyword">static</span> ifVisit() &#123;</div><div class="line">        <span class="built_in">console</span>.log(<span class="string">'访问到了！'</span>)</div><div class="line">    &#125;</div><div class="line">    dosth() &#123;</div><div class="line">        <span class="built_in">console</span>.log(<span class="string">'做些事!'</span>)</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"><span class="keyword">var</span> _parent = <span class="keyword">new</span> parent();</div><div class="line">_parent.ifVisit();<span class="comment">//_parent.ifVisit is not a function</span></div><div class="line">parent.ifVisit();<span class="comment">//访问到了！</span></div></pre></td></tr></table></figure></p>
+<p>这给我们在某些特定情况下不想让实例访问我们原型里定义的方法提供了方便，也更严谨了。</p>
+<p>ES6提出了一种全新的继承方式，形式和<mred>java</mred>的继承看上去很像，通过<mred>extend</mred>关键字来实现：<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">parent</span> </span>&#123;</div><div class="line">    <span class="keyword">constructor</span>() &#123;</div><div class="line">        <span class="keyword">this</span>.name = <span class="string">'redjue'</span>;</div><div class="line">        <span class="keyword">this</span>.age = <span class="number">24</span></div><div class="line">    &#125;</div><div class="line">    dosth() &#123;</div><div class="line">        <span class="built_in">console</span>.log(<span class="string">'做些事!'</span>)</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">child</span> <span class="keyword">extends</span> <span class="title">parent</span> </span>&#123;</div><div class="line">    <span class="keyword">constructor</span>() &#123;</div><div class="line">        <span class="keyword">super</span>();</div><div class="line">        <span class="keyword">this</span>.career = <span class="string">'programmer'</span></div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"><span class="keyword">var</span> _child = <span class="keyword">new</span> child();<span class="comment">//&#123;name: "redjue", age: 24, career: "programmer"&#125;</span></div><div class="line">_child.dosth();<span class="comment">//做些事!</span></div></pre></td></tr></table></figure></p>
+<p>完美！既把父类的属性私有化了，又继承到了父类原型里的<mred>dosth</mred>方法，让我们把<mred>_child</mred>的原型输出来看看：<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line">    <span class="keyword">constructor</span>: class child,</div><div class="line">    __proto__: Object</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>我们发现原型的<mred>constructor</mred>指向的是class child，那父类的属性是怎么跑到子类里的呢？，秘密就在<mred>super</mred>关键字。</p>
+<p><mred>super</mred>关键字和我们之前探讨过的ES5继承里面的借用构造其实是一个意思，<mred>super</mred>是ES6向我们提供的语法糖而已，等价于ES5的<mred>parent.call(this)</mred>,区别在于ES6语法规定不用<mred>super</mred>关键字就没有<mred>this</mred>指向，所以不能直接替换用，只是底层原理是类似的：<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line">   <span class="class"><span class="keyword">class</span> <span class="title">child</span> <span class="keyword">extends</span> <span class="title">parent</span> </span>&#123;</div><div class="line">    <span class="keyword">constructor</span>() &#123;</div><div class="line">        <span class="keyword">super</span>();<span class="comment">//类似于parent.call(this)</span></div><div class="line">        <span class="keyword">this</span>.career = <span class="string">'programmer'</span></div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h3 id="ES6继承实现的原理"><a href="#ES6继承实现的原理" class="headerlink" title="ES6继承实现的原理"></a><mblack>ES6继承实现的原理</mblack></h3><p>ES6实现继承其实也就走了两条路，属性的私有化和方法的共有化，大致过程如下：<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">child</span>.<span class="title">__proto__</span></span>=<span class="class"><span class="keyword">class</span> <span class="title">parent</span></span>;<span class="comment">//属性私有化</span></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">child</span>.<span class="title">prototype</span>.<span class="title">__proto__</span></span>=<span class="class"><span class="keyword">class</span> <span class="title">parent</span>.<span class="title">prototype</span></span>;<span class="comment">//方法共有化</span></div></pre></td></tr></table></figure></p>
+<p>ES5的组合继承根本上讲也就是为了实现以上两种情况，只不过ES6的实现更加优雅，还有一点值得指出来的是，ES5构造函数的<code>__proto__</code>永远指向的是<mred>Function</mred>对象的原型，不会因为实例的继承而改变指向，而在ES6中不一样，当子类继承父类之后，子类的<code>__proto__</code>会指向父类，这样表示显得更加规范，也清楚明了的表示了子类继承了父类的属性。</p>
+<h4 id="备注：本篇博客皆为博主原创，转发请标明出处。"><a href="#备注：本篇博客皆为博主原创，转发请标明出处。" class="headerlink" title="备注：本篇博客皆为博主原创，转发请标明出处。"></a>备注：本篇博客皆为博主原创，转发请标明出处。</h4>
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/原型与继承/" rel="tag"># 原型与继承</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/07/19/浅谈浏览器加载优化/" rel="next" title="浅谈浏览器加载优化">
+                <i class="fa fa-chevron-left"></i> 浅谈浏览器加载优化
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/08/31/webpack的配置解析/" rel="prev" title="webpack的配置解析">
+                webpack的配置解析 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zMDQzNi82OTkw"></div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/redjue.jpg"
+               alt="Red Jue" />
+          <p class="site-author-name" itemprop="name">Red Jue</p>
+           
+              <p class="site-description motion-element" itemprop="description">努力成为一名Geek (๑•̀ㅂ•́)و✧</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">4</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">4</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/RedJue" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://twitter.com/pingfj77" target="_blank" title="Twitter">
+                  
+                    <i class="fa fa-fw fa-twitter"></i>
+                  
+                  Twitter
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/2938531080/profile?topnav=1&wvr=6&is_all=1" target="_blank" title="微博">
+                  
+                    <i class="fa fa-fw fa-weibo"></i>
+                  
+                  微博
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://www.zhihu.com/people/feng-ji-4-11/activities" target="_blank" title="知乎">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  知乎
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#构造函数"><span class="nav-number">1.</span> <span class="nav-text">构造函数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#原型链的传递"><span class="nav-number">2.</span> <span class="nav-text">原型链的传递</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#构造函数创建实例的过程"><span class="nav-number">2.1.</span> <span class="nav-text">构造函数创建实例的过程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#proto属性"><span class="nav-number">2.2.</span> <span class="nav-text">proto属性</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ES5继承的实现"><span class="nav-number">3.</span> <span class="nav-text">ES5继承的实现</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#常规的实现方式"><span class="nav-number">3.1.</span> <span class="nav-text">常规的实现方式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#借用构造实现组合继承"><span class="nav-number">3.2.</span> <span class="nav-text">借用构造实现组合继承</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ES6继承的实现"><span class="nav-number">4.</span> <span class="nav-text">ES6继承的实现</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#class，static，extend和super关键字"><span class="nav-number">4.1.</span> <span class="nav-text">class，static，extend和super关键字</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ES6继承实现的原理"><span class="nav-number">4.2.</span> <span class="nav-text">ES6继承实现的原理</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#备注：本篇博客皆为博主原创，转发请标明出处。"><span class="nav-number">4.2.1.</span> <span class="nav-text">备注：本篇博客皆为博主原创，转发请标明出处。</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Red Jue</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      人次
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      次
+    </span>
+  
+</div>
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/canvas-ribbon/canvas-ribbon.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.1"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
