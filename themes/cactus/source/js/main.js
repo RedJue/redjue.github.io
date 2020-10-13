@@ -17,10 +17,12 @@ $(document).ready(function () {
     $('#header > #nav > ul > .icon').click(function () {
         $('#header > #nav > ul').toggleClass('responsive');
     });
-    var typed = new Typed('#type-words', {
-        strings: ['种一棵树最好的时机是10年前，^800其次是现在。'],
-        typeSpeed: 50
-    });
+    if(document.getElementById('type-words') !== null){
+        new Typed('#type-words', {
+            strings: ['种一棵树最好的时机是10年前，^800其次是现在。'],
+            typeSpeed: 50
+        });
+    }
     /**
      * Controls the different versions of  the menu in blog post articles
      * for Desktop, tablet and mobile.
