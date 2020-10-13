@@ -1,12 +1,12 @@
 [
     {
-       "name":"git-commit-plugin",
-       "url":"https://github.com/RedJue/git-commit-plugin",
-       "desc":"Vscode plugin that automatically generate git commit"
+        "name": "git-commit-plugin",
+        "url": "https://github.com/RedJue/git-commit-plugin",
+        "desc": "自动生成提交信息的 Vscode 插件"
     },
     {
-       "name":"vue-crop-image-mobile",
-       "url":"https://github.com/RedJue/vue-crop-image-mobile",
-       "desc":"Vue2.x plugin that cut the picture for the mobile end."
+        "name": "vue-crop-image-mobile",
+        "url": "https://github.com/RedJue/vue-crop-image-mobile",
+        "desc": "Vue2.x 移动端图片裁剪插件"
     }
 ]

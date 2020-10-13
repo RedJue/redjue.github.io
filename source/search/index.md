@@ -1,5 +1,5 @@
 ---
 title: search
-type: search
-date: 2020-10-12 15:03:17
+date: 2020-10-13 09:03:06
+type: 'search'
 ---
