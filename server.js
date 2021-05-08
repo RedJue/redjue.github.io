@@ -8,11 +8,10 @@ const opt = {
   key: pk,
   cert: pc,
 };
-console.log(opt);
 app.use("/", express.static("public"));
 const server = https.createServer(opt, app);
 
-server.listen(80, () => console.log("Example app listening on port 80!"));
+server.listen(3001, () => console.log("Example app listening on port 3001!"));
 server.on("error", (error) => {
   console.log(error);
 });
