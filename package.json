@@ -24,5 +24,8 @@
     "hexo-renderer-stylus": "^2.0.0",
     "hexo-server": "^2.0.0",
     "live2d-widget-model-tororo": "^1.0.5"
+  },
+  "devDependencies": {
+    "express": "^4.17.2"
   }
 }
