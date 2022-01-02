@@ -1,6 +1,7 @@
 ---
 title: React 团队新年礼物 Server Components 是否为未来前端的发展方向？
 date: 2021-01-27 10:30:27
+categories: 分享
 tags: react
 ---
 
@@ -12,7 +13,7 @@ tags: react
 
 > As 2020 comes to an end we wanted to share a special Holiday Update on our research into zero-bundle-size React Server Components.
 
-`React Server Components`、`zero-bundle-size` 这些词让我意识到事情并不简单，而且可能是一种全新的尝试，带着强烈的好奇心，我看完了官方的[演示视频](https://www.youtube.com/watch?v=TQQPAU21ZUw)（需要科学上网），视频的演示真的让我激动！跟我理想的前端架构越来越接近了，接下来让笔者带你们了解下这全新的 `React Server Components`!
+`React Server Components`、`zero-bundle-size` 这些词让我意识到事情并不简单，而且可能是一种全新的尝试，带着强烈的好奇心，我看完了官方的[演示视频](https://www.youtube.com/watch?v=TQQPAU21ZUw)（需要科学上网），视频的演示真的让我激动！跟我理想的前端架构越来越接近了，接下来让笔者带你们了解下这全新的 `React Server Components`!<!-- more -->
 
 # 什么是 Server Components？
 
