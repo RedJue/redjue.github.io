@@ -21,14 +21,14 @@ minify: false
 custom_file_path:
   #head: source/_data/head.njk
   #header: source/_data/header.njk
-  #sidebar: source/_data/sidebar.njk
+  sidebar: source/_data/sidebar.njk
   #postMeta: source/_data/post-meta.njk
   #postBodyEnd: source/_data/post-body-end.njk
   #footer: source/_data/footer.njk
   #bodyEnd: source/_data/body-end.njk
-  #variable: source/_data/variables.styl
+  variable: source/_data/variables.styl
   #mixin: source/_data/mixins.styl
-  #style: source/_data/styles.styl
+  style: source/_data/styles.styl
 
 # ---------------------------------------------------------------
 # Scheme Settings
@@ -65,7 +65,7 @@ creative_commons:
   # Available values: big | small
   size: small
   sidebar: false
-  post: false
+  post: true
   # You can set a language value if you prefer a translated version of CC license, e.g. deed.zh
   # CC licenses are available in 39 languages, you can find the specific and correct abbreviation you need on https://creativecommons.org
   language:
@@ -139,9 +139,11 @@ site_state: true
 social:
   GitHub: https://github.com/RedJue || fab fa-github
   E-Mail: mailto:pingfj77@gmail.com || fa fa-envelope
-  # Weibo: https://weibo.com/yourname || fab fa-weibo
+  Weibo: https://weibo.com/u/2938531080 || fab fa-weibo
   #Google: https://plus.google.com/yourname || fab fa-google
   Twitter: https://twitter.com/redjue_fj || fab fa-twitter
+  zhihu: https://www.zhihu.com/people/feng-ji-4-11 || fab fa-zhihu
+  掘金: https://juejin.cn/user/3280598429871159 || fas fa-link
   #FB Page: https://www.facebook.com/yourname || fab fa-facebook
   #StackOverflow: https://stackoverflow.com/yourname || fab fa-stack-overflow
   #YouTube: https://youtube.com/yourname || fab fa-youtube
@@ -150,8 +152,8 @@ social:
 
 social_icons:
   enable: true
-  icons_only: true
-  transition: false
+  icons_only: false
+  transition: true
 
 # Blog rolls
 links_settings:
@@ -239,7 +241,7 @@ post_meta:
 # Dependencies: https://github.com/next-theme/hexo-word-counter
 symbols_count_time:
   separated_meta: true
-  item_text_total: false
+  item_text_total: true
 
 # Use icon instead of the symbol # to indicate the tag at the bottom of the post
 tag_icon: true
@@ -271,7 +273,7 @@ follow_me:
 related_posts:
   enable: false
   title: # Custom header, leave empty to use the default one
-  display_in_home: false
+  display_in_home: true
   params:
     maxCount: 5
     #PPMixingRate: 0.0
@@ -350,7 +352,7 @@ codeblock:
   # Code Highlight theme
   # All available themes: https://theme-next.js.org/highlight/
   theme:
-    light: nord
+    light: tomorrow
     dark: nord
   prism:
     light: prism
@@ -366,7 +368,7 @@ back2top:
   # Back to top in sidebar.
   sidebar: false
   # Scroll percent label in b2t button.
-  scrollpercent: false
+  scrollpercent: true
 
 # Reading progress bar
 reading_progress:
@@ -407,7 +409,7 @@ github_banner:
 # ---------------------------------------------------------------
 
 font:
-  enable: false
+  enable: true
 
   # Uri of fonts host, e.g. https://fonts.googleapis.com (Default).
   host:
@@ -452,10 +454,10 @@ font:
 
 # If true, site-subtitle will be added to index page.
 # Remember to set up your site-subtitle in Hexo `_config.yml` (e.g. subtitle: Subtitle)
-index_with_subtitle: false
+index_with_subtitle: true
 
 # Automatically add external URL with Base64 encrypt & decrypt.
-exturl: false
+exturl: true
 # If true, an icon will be attached to each external URL
 exturl_icon: true
 
@@ -553,24 +555,24 @@ comments:
   style: tabs
   # Choose a comment system to be displayed by default.
   # Available values: disqus | disqusjs | changyan | livere | gitalk | utterances
-  active: utterances
+  active: disqus
   # Setting `true` means remembering the comment system selected by the visitor.
   storage: true
   # Lazyload all comment systems.
   lazyload: false
   # Modify texts or order for any naves, here are some examples.
   nav:
-    #disqus:
-    #  text: Load Disqus
-    #  order: -1
+    disqus:
+      text: Load Disqus
+      order: -1
     #gitalk:
     #  order: -2
 
 # Disqus
 # For more information: https://disqus.com
 disqus:
-  enable: false
-  shortname:
+  enable: true
+  shortname: Redjue
   count: true
 
 # DisqusJS
@@ -616,7 +618,7 @@ gitalk:
 # Utterances
 # For more information: https://utteranc.es
 utterances:
-  enable: true
+  enable: false
   repo: https://github.com/RedJue/redjue.github.io # Github repository name
   # Available values: pathname | url | title | og:title
   issue_term: https://github.com/RedJue/redjue.github.io/issues
@@ -848,6 +850,9 @@ auto_excerpt:
 
 clicklove: true
 
+recent_posts: true
+recent_posts_title: 近期文章
+recent_posts_layout: block
 # ---------------------------------------------------------------
 # CDN Settings
 # See: https://theme-next.js.org/docs/advanced-settings/vendors

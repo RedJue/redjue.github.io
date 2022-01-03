@@ -121,6 +121,18 @@ live2d:
   react:
     opacity: 0.8
 
+# popularPosts:
+#   googleAnalyticsAPI:
+#     clientId: ******.apps.googleusercontent.com
+#     serviceEmail: *****@developer.gserviceaccount.com
+#     key: /hexo-project-root/path/to/google-services.pem
+#     viewId: 12345678
+#     dateRange: 30       # (Optional) The period you want to get by Google Analytics page view. Default = 30
+#     expiresDate: 10     # (optional) Expiration date of cache file. Default = 10
+#     # cache:            # (Deprecated) This options is Deprecated > v0.1.3
+#     #  path: hexo-related-popular-posts-ga-cached.json  # (Deprecated) This options is Deprecated > v0.1.3
+#     #  expiresDate: 10  # (Deprecated) This options is Deprecated > v0.1.3
+
 # Extensions
 ## Plugins: https://hexo.io/plugins/
 ## Themes: https://hexo.io/themes/
