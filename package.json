@@ -27,6 +27,6 @@
     "live2d-widget-model-tororo": "^1.0.5"
   },
   "devDependencies": {
-    "express": "^4.17.2"
+    "express": "^4.18.0"
   }
 }
